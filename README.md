@@ -8,7 +8,7 @@ You must setup an .env file before you begin.  This file will contain important 
 
 ## Exports
 
-The export script will require a valid .env file and keycloak admin credentials to begin.
+The export script will require a valid .env file with keycloak admin credentials to begin.
 
 Exports will be written to a timestamped subfolder of a ```keycloak-exports``` subfolder of the current folder.  
 
@@ -17,6 +17,11 @@ Exports will be written to a timestamped subfolder of a ```keycloak-exports``` s
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 EXPORT_DIR="$SCRIPT_DIR/keycloak-exports"
+```
+### Usage
+```
+# Usage: ./keycloak-export.sh
+# Reads configuration from .env
 ```
 
 There will be 1 timestamped sub-folder created per export.
