@@ -58,7 +58,8 @@ load_env() {
         log "KEYCLOAK_ADMIN_CLIENT_ID=actual-admin-cli"
         log "KEYCLOAK_ADMIN_CLIENT_SECRET=your-admin-secret"
         log "KEYCLOAK_CLIENT_ID=demo-example"
-        log "SOGO_CLIENT_ID=SOGO-client"
+        log "STALWART_CLIENT_ID=stalwart-client"
+        log "SOGO_CLIENT_ID=sogo-client"
         log ""
         log "You can copy from env.example and update with your real values"
         exit 1
@@ -434,7 +435,7 @@ create_export_summary() {
   "environment_clients": {
     "main_app_client": "${KEYCLOAK_CLIENT_ID:-N/A}",
     "stalwart_client": "${STALWART_CLIENT_ID:-N/A}",
-    "SOGO_client": "${SOGO_CLIENT_ID:-N/A}"
+    "sogo_client": "${SOGO_CLIENT_ID:-N/A}"
   }
 }
 EOF
