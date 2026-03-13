@@ -7,7 +7,7 @@
 # for backup and deployment preparation purposes.
 #
 # Usage: ./keycloak-export.sh
-# Reads configuration from backend/.env
+# Reads configuration from .env
 # =============================================================================
 
 set -euo pipefail
@@ -25,7 +25,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 EXPORT_DIR="$SCRIPT_DIR/keycloak-exports"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
-# No environment parameter needed - uses backend/.env directly
+# No environment parameter needed - uses .env directly
 
 # Logging function
 log() {
@@ -46,22 +46,21 @@ log_error() {
 
 # Function to load environment variables
 load_env() {
-    local env_file="$PROJECT_ROOT/backend/.env"
+    local env_file="$PROJECT_ROOT/.env"
     
     if [[ ! -f "$env_file" ]]; then
         log_error "Environment file not found: $env_file"
         log ""
-        log "Please create backend/.env with your Keycloak configuration:"
-        log "KEYCLOAK_URL=https://secure.workinpilot.org"
-        log "KEYCLOAK_REALM=OIDCRealm"
-        log "KEYCLOAK_ADMIN_REALM=OIDCRealm"
+        log "Please create .env with your Keycloak configuration:"
+        log "KEYCLOAK_URL=https://secure.example.com"
+        log "KEYCLOAK_REALM=ExampleRealm"
+        log "KEYCLOAK_ADMIN_REALM=ExampleRealm"
         log "KEYCLOAK_ADMIN_CLIENT_ID=actual-admin-cli"
         log "KEYCLOAK_ADMIN_CLIENT_SECRET=your-admin-secret"
-        log "KEYCLOAK_CLIENT_ID=demo-workinpilot"
-        log "NEXTCLOUD_CLIENT_ID=WipCloud"
-        log "MAILCOW_CLIENT_ID=mailcow"
+        log "KEYCLOAK_CLIENT_ID=demo-example"
+        log "SOGO_CLIENT_ID=SOGO-client"
         log ""
-        log "You can copy from backend/config.env.example and update with real values"
+        log "You can copy from env.example and update with your real values"
         exit 1
     fi
     
@@ -235,8 +234,8 @@ export_specific_clients() {
     # List of client IDs from environment variables
     local env_clients=(
         "KEYCLOAK_CLIENT_ID"
-        "NEXTCLOUD_CLIENT_ID"
-        "MAILCOW_CLIENT_ID"
+        "STALWART_CLIENT_ID"
+        "SOGO_CLIENT_ID"
     )
     
     for env_var in "${env_clients[@]}"; do
@@ -434,8 +433,8 @@ create_export_summary() {
   },
   "environment_clients": {
     "main_app_client": "${KEYCLOAK_CLIENT_ID:-N/A}",
-    "nextcloud_client": "${NEXTCLOUD_CLIENT_ID:-N/A}",
-    "mailcow_client": "${MAILCOW_CLIENT_ID:-N/A}"
+    "stalwart_client": "${STALWART_CLIENT_ID:-N/A}",
+    "SOGO_client": "${SOGO_CLIENT_ID:-N/A}"
   }
 }
 EOF
@@ -559,8 +558,8 @@ curl -X POST \\
 
 Based on your environment configuration:
 - **Main App Client**: ${KEYCLOAK_CLIENT_ID:-N/A}
-- **NextCloud Client**: ${NEXTCLOUD_CLIENT_ID:-N/A}
-- **MailCow Client**: ${MAILCOW_CLIENT_ID:-N/A}
+- **Stalwart Client**: ${STALWART_CLIENT_ID:-N/A}
+- **SOGo Client**: ${SOGO_CLIENT_ID:-N/A}
 
 ## Security Considerations
 
@@ -575,7 +574,7 @@ EOF
 
 # Main execution function
 main() {
-    log "Starting Keycloak export from backend/.env"
+    log "Starting Keycloak export from .env"
     
     # Load environment variables
     load_env
