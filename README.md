@@ -1,6 +1,6 @@
 # clone-keycloak-realm
 
-Scripts to export objects and import same from / to selected keycloak realms.  Exported content is stored in a timestamped collection of json files that can later be imported under a new realm name.
+Keycloak API scripts to export objects and import same from / to selected keycloak realms.  Exported content is stored in a timestamped collection of json files that can later be imported under a new realm name.
 
 ## Setup
 
