@@ -243,7 +243,7 @@ import_clients() {
     local failed_count=0
     
     # Define the clients we want to import (manually configured ones)
-    local target_clients=("demo-workinpilot" "mailcow" "WipCloud" "actual-admin-cli")
+    local target_clients=("demo-example" "sogo" "stalwart" "actual-admin-cli")
     
     for client_name in "${target_clients[@]}"; do
         log "Processing client: $client_name"
@@ -602,9 +602,9 @@ show_next_steps() {
     echo ""
     echo "2. **Update Redirect URIs**:"
     echo "   - Update redirect URIs for your staging environment"
-    echo "   - Main app: http://staging.workinpilot.org/auth/keycloak/callback"
-    echo "   - NextCloud: https://staging-cloud.workinpilot.org/callback"
-    echo "   - MailCow: https://staging-mail.workinpilot.org/callback"
+    echo "   - Main app: http://staging.example.com/auth/keycloak/callback"
+    echo "   - Stalwart: https://staging-mail.example.com/callback"
+    echo "   - Sogo: https://staging-sogo.example.com/callback"
     echo ""
     echo "3. **Update Environment Variables**:"
     echo "   - Update your staging .env file with new Keycloak URL"
