@@ -49,6 +49,24 @@ project-root/
 └── keycloak-import.sh      # Script to import Keycloak configurations
 ```
 
+## Timestamped Folder Structure - Example
+
+```
+keycloak-exports/2025-04-05T14:30:00Z/
+├── realm.json
+├── clients/
+│   ├── client-One.json
+│   └── client-Another.json
+├── specific-clients/
+│   ├── client-Two.json
+│   └── client-Third.json
+├── roles/
+│   └── role-Admin.json
+└── service_accounts/
+    └── user-service-account.json
+```
+
+
 ---
 
 ## Exports
@@ -75,7 +93,7 @@ To export a Keycloak realm:
 To import a previously exported realm:
 
 ```bash
-./keycloak-import.sh <target-keycloak-url> <admin-username> <admin-password> [--dry-run]
+./keycloak-import.sh --imported-realm <realm-name> <target-keycloak-url> <admin-username> <admin-password> [--dry-run]
 ```
 
 ### Options
@@ -105,12 +123,24 @@ cp .env.template .env
 cd keycloak-exports/2025-04-05T14:30:00Z/
 
 # Run import
-./keycloak-import.sh https://keycloak.example.com/auth admin admin
+./keycloak-import.sh --imported-realm NewRealm https://keycloak.example.com/auth admin admin
 ```
 
 ---
 
-## Notes
+## Note - To Clone Into a New Realm:
+If you wish to import the exported realm into a NEW realm, you must
+ 1. change the .env file to replace old realm name with the new name, 
+ 2. remove the "id" field from .json import files (let Keycloak generate it), 
+ 3. change the realm.json and client.json files to replace the old realm name with the new realm name.
+ 4. get rid of 'id' element in json files, so that keycloak can generate a new id (must be unique within the realm)
+ 5. check the new realm-name is used by the clients referenced in `keycloak-import.sh` 
+ 6. set `--imported_realm` to your new realm name when. you run `keycloak-import.sh`
+
+
+---
+
+## General Notes
 
 - **Exported data** can be imported into a **new or existing realm**.
 - **Realm name** is not preserved during import — it is set via the `.env` file.

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# Keycloak Import Script for Cloning OIDCRealm
+# Keycloak Import Script for Cloning ExampleRealm
 # =============================================================================
 # This script imports the exported Keycloak realm and client definitions
 # to a new Keycloak instance for staging/testing purposes.
@@ -172,7 +172,7 @@ get_admin_token() {
 import_realm() {
     log "Importing realm configuration..."
     
-    local realm_file="$EXPORT_PATH/realm-OIDCRealm.json"
+    local realm_file="$EXPORT_PATH/realm-ExampleRealm.json"
     
     if [[ ! -f "$realm_file" ]]; then
         log_error "Realm configuration file not found: $realm_file"
@@ -243,7 +243,7 @@ import_clients() {
     local failed_count=0
     
     # Define the clients we want to import (manually configured ones)
-    local target_clients=("demo-example" "sogo" "stalwart" "actual-admin-cli")
+    local target_clients=("demo-example" "sogo-client" "stalwart-client" "actual-admin-cli")
     
     for client_name in "${target_clients[@]}"; do
         log "Processing client: $client_name"
@@ -322,7 +322,7 @@ import_clients() {
         
         local response
         response=$(curl -s -w "\n%{http_code}" -X POST \
-            "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/clients" \
+            "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/clients" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
             -d @"$temp_client_file" 2>&1)
@@ -391,7 +391,7 @@ import_realm_roles() {
         local role_name=$(echo "$role_json" | jq -r '.name')
         
         # Skip default roles that are created automatically
-        if [[ "$role_name" == "offline_access" || "$role_name" == "uma_authorization" || "$role_name" == "default-roles-oidcrealm" ]]; then
+        if [[ "$role_name" == "offline_access" || "$role_name" == "uma_authorization" || "$role_name" == "default-roles-examplerealm" ]]; then
             log "Skipping default role: $role_name (created automatically by Keycloak)"
             continue
         fi
@@ -408,7 +408,7 @@ import_realm_roles() {
         
         local response
         response=$(curl -s -X POST \
-            "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/roles" \
+            "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/roles" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
             -d "$role_json")
@@ -471,7 +471,7 @@ import_service_account_roles() {
         # Get the client UUID from clientId
         local client_response
         client_response=$(curl -s -X GET \
-            "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/clients?clientId=$client_id" \
+            "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/clients?clientId=$client_id" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json")
         
@@ -491,7 +491,7 @@ import_service_account_roles() {
         # Get service account user ID
         local sa_user_response
         sa_user_response=$(curl -s -X GET \
-            "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/clients/$client_uuid/service-account-user" \
+            "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/clients/$client_uuid/service-account-user" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json")
         
@@ -516,7 +516,7 @@ import_service_account_roles() {
             log "Assigning realm roles to service account for: $client_id"
             local response
             response=$(curl -s -X POST \
-                "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/users/$sa_user_id/role-mappings/realm" \
+                "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/users/$sa_user_id/role-mappings/realm" \
                 -H "Authorization: Bearer $ACCESS_TOKEN" \
                 -H "Content-Type: application/json" \
                 -d "$realm_roles")
@@ -536,7 +536,7 @@ import_service_account_roles() {
             # Client roles need to be assigned per client - get realm-management client ID
             local realm_mgmt_response
             realm_mgmt_response=$(curl -s -X GET \
-                "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/clients?clientId=realm-management" \
+                "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/clients?clientId=realm-management" \
                 -H "Authorization: Bearer $ACCESS_TOKEN" \
                 -H "Content-Type: application/json")
             
@@ -547,7 +547,7 @@ import_service_account_roles() {
                 log "Assigning client roles to service account for: $client_id"
                 local response
                 response=$(curl -s -X POST \
-                    "$TARGET_KEYCLOAK_URL/admin/realms/OIDCRealm/users/$sa_user_id/role-mappings/clients/$realm_mgmt_id" \
+                    "$TARGET_KEYCLOAK_URL/admin/realms/ExampleRealm/users/$sa_user_id/role-mappings/clients/$realm_mgmt_id" \
                     -H "Authorization: Bearer $ACCESS_TOKEN" \
                     -H "Content-Type: application/json" \
                     -d "$client_roles")
@@ -576,7 +576,7 @@ create_import_summary() {
   "target_keycloak_url": "$TARGET_KEYCLOAK_URL",
   "source_export": "$LATEST_EXPORT",
   "imported_components": {
-    "realm_configuration": "OIDCRealm",
+    "realm_configuration": "ExampleRealm",
     "clients": "clients/",
     "realm_roles": "realm-roles.json"
   },
