@@ -136,6 +136,7 @@ If you wish to import the exported realm into a NEW realm, you must
  4. get rid of 'id' element in json files, so that keycloak can generate a new id (must be unique within the realm)
  5. check the new realm-name is used by the clients referenced in `keycloak-import.sh` 
  6. set `--imported_realm` to your new realm name when. you run `keycloak-import.sh`
+ 7. Ensure that `TARGET_CLIENT` list (in script) contains the list of client names you wish to clone
 
 
 ---
